@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Solution {
+public:
+    bool dfs(int currNode, vector<vector<int>>& graph, vector<int>& vis, set<int> &safeNodes){
+        if(vis[currNode]){
+            if(safeNodes.find(currNode) != safeNodes.end()){
+                return true;
+            }
+            return false;
+        }
+        vis[currNode] = 1;
+        //we are checking for terminal node
+        if(graph[currNode].empty()){
+             safeNodes.insert(currNode);
+             return true;
+        }
+        for(auto neigh: graph[currNode]){
+            if(dfs(neigh, graph, vis, safeNodes) == false){
+                return false;
+            }
+        }
+        safeNodes.insert(currNode);
+        return true;
+    }
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int no_of_nodes = graph.size();
+        vector<int> vis(no_of_nodes, 0);
+        set<int> safeNodes;
+        
+        for(int i = 0; i < no_of_nodes; i++){
+            if(dfs(i, graph, vis, safeNodes)) safeNodes.insert(i);
+        }
+        vector<int> result(safeNodes.begin(), safeNodes.end());
+        return result;
+    }
+};
